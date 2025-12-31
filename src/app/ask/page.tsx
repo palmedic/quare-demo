@@ -3,6 +3,7 @@
 import { useState } from 'react'
 import { useCustomerTwinStore, VectorKey } from '@/store/customerTwinStore'
 import { sampleQuestions, getQuestionAnswer } from '@/data/sampleQuestions'
+import { DatabaseIcon, UsersIcon, CodeIcon, CheckIcon, SparklesIcon, ArrowRightIcon } from '@/components/Icons'
 
 export default function AskPage() {
   const { vectors, askQuestion, isProcessing, activeQuestion, recentGains } = useCustomerTwinStore()
@@ -86,21 +87,27 @@ export default function AskPage() {
           </h3>
           <div className="space-y-3">
             <div className="flex items-center gap-3 text-amber-800">
-              <span className="w-5 h-5 border-2 border-amber-400 rounded" />
+              <div className="w-5 h-5 border-2 border-amber-400 rounded flex items-center justify-center">
+                <DatabaseIcon size={12} className="text-amber-400" />
+              </div>
               <div>
                 <p className="font-medium">Connect a data source</p>
                 <p className="text-sm text-amber-600">"Connect Salesforce to see deal history"</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-amber-800">
-              <span className="w-5 h-5 border-2 border-amber-400 rounded" />
+              <div className="w-5 h-5 border-2 border-amber-400 rounded flex items-center justify-center">
+                <UsersIcon size={12} className="text-amber-400" />
+              </div>
               <div>
                 <p className="font-medium">Interview an SME</p>
                 <p className="text-sm text-amber-600">"Talk to your CS Lead about churn patterns"</p>
               </div>
             </div>
             <div className="flex items-center gap-3 text-amber-800">
-              <span className="w-5 h-5 bg-amber-400 rounded flex items-center justify-center text-white text-xs">✓</span>
+              <div className="w-5 h-5 bg-amber-400 rounded flex items-center justify-center">
+                <CheckIcon size={12} className="text-white" />
+              </div>
               <div>
                 <p className="font-medium">Extract from code</p>
                 <p className="text-sm text-amber-600">"Using pricing repo to extract business rules"</p>
@@ -168,8 +175,9 @@ export default function AskPage() {
             {/* Understanding Gains */}
             {recentGains.length > 0 && (
               <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                <p className="text-sm font-medium text-green-800 mb-2">
-                  ✨ Understanding Improved
+                <p className="text-sm font-medium text-green-800 mb-2 flex items-center gap-2">
+                  <SparklesIcon size={16} />
+                  Understanding Improved
                 </p>
                 <div className="flex gap-2 flex-wrap">
                   {recentGains.map((gain) => (
@@ -191,9 +199,10 @@ export default function AskPage() {
 
           <button
             onClick={resetState}
-            className="mt-4 text-sm text-primary hover:text-primary-600 font-medium"
+            className="mt-4 text-sm text-primary hover:text-primary-600 font-medium flex items-center gap-1"
           >
-            Ask another question →
+            Ask another question
+            <ArrowRightIcon size={14} />
           </button>
         </div>
       )}
@@ -213,7 +222,7 @@ export default function AskPage() {
                   <span className="text-gray-700 group-hover:text-gray-900">
                     {q.question}
                   </span>
-                  <span className="text-gray-400 group-hover:text-primary">→</span>
+                  <ArrowRightIcon size={16} className="text-gray-400 group-hover:text-primary" />
                 </div>
                 {/* Preview of dimension impacts */}
                 <div className="flex gap-2 mt-2">

@@ -1,15 +1,27 @@
 'use client'
 
 import { useCustomerTwinStore } from '@/store/customerTwinStore'
+import { ShieldIcon, DollarIcon, RocketIcon, SparklesIcon, TrendingUpIcon, TargetIcon, ClockIcon, ArrowRightIcon } from '@/components/Icons'
+import { ReactNode, CSSProperties } from 'react'
 
-const agents = [
+interface Agent {
+  id: string
+  name: string
+  description: string
+  metric: string
+  status: string
+  Icon: (props: { size?: number; className?: string; style?: CSSProperties }) => ReactNode
+  color: string
+}
+
+const agents: Agent[] = [
   {
     id: 'churn',
     name: 'Churn Prevention Agent',
     description: 'Monitors at-risk customers and triggers retention actions',
     metric: '12 at-risk customers',
     status: 'active',
-    icon: '🛡️',
+    Icon: ShieldIcon,
     color: '#EF4444'
   },
   {
@@ -18,7 +30,7 @@ const agents = [
     description: 'Adjusts proposals based on customer value signals',
     metric: '8 deals optimized this week',
     status: 'active',
-    icon: '💰',
+    Icon: DollarIcon,
     color: '#F59E0B'
   },
   {
@@ -27,7 +39,7 @@ const agents = [
     description: 'Personalizes onboarding sequences for each customer',
     metric: '23 journeys personalized',
     status: 'active',
-    icon: '🚀',
+    Icon: RocketIcon,
     color: '#10B981'
   },
   {
@@ -36,16 +48,22 @@ const agents = [
     description: 'Recommends features based on usage patterns',
     metric: '156 recommendations sent',
     status: 'paused',
-    icon: '✨',
+    Icon: SparklesIcon,
     color: '#8B5CF6'
   }
 ]
 
-const impactMetrics = [
-  { label: 'Prevented Churn (this quarter)', value: '$847,000', icon: '💵' },
-  { label: 'Onboarding Completion Improvement', value: '+34%', icon: '📈' },
-  { label: 'Deals Optimized', value: '89', icon: '🎯' },
-  { label: 'Hours Saved', value: '1,240', icon: '⏱️' }
+interface ImpactMetric {
+  label: string
+  value: string
+  Icon: (props: { size?: number; className?: string }) => ReactNode
+}
+
+const impactMetrics: ImpactMetric[] = [
+  { label: 'Prevented Churn (this quarter)', value: '$847,000', Icon: DollarIcon },
+  { label: 'Onboarding Completion Improvement', value: '+34%', Icon: TrendingUpIcon },
+  { label: 'Deals Optimized', value: '89', Icon: TargetIcon },
+  { label: 'Hours Saved', value: '1,240', Icon: ClockIcon }
 ]
 
 export default function AutomationsPage() {
@@ -67,7 +85,7 @@ export default function AutomationsPage() {
             className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
           >
             <div className="flex items-center gap-2 mb-2">
-              <span className="text-xl">{metric.icon}</span>
+              <metric.Icon size={20} className="text-gray-400" />
             </div>
             <p className="text-2xl font-semibold text-gray-900">{metric.value}</p>
             <p className="text-sm text-gray-500 mt-1">{metric.label}</p>
@@ -87,10 +105,10 @@ export default function AutomationsPage() {
                   className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
                 >
                   <div
-                    className="w-10 h-10 rounded-lg flex items-center justify-center text-xl"
+                    className="w-10 h-10 rounded-lg flex items-center justify-center"
                     style={{ backgroundColor: agent.color + '15' }}
                   >
-                    {agent.icon}
+                    <agent.Icon size={20} className="text-current" style={{ color: agent.color }} />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
@@ -113,8 +131,9 @@ export default function AutomationsPage() {
                       {agent.metric}
                     </p>
                   </div>
-                  <button className="text-sm text-gray-400 hover:text-gray-600">
-                    Configure →
+                  <button className="text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1">
+                    Configure
+                    <ArrowRightIcon size={14} />
                   </button>
                 </div>
               ))}

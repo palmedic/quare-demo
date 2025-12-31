@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { useCustomerTwinStore, VectorKey } from '@/store/customerTwinStore'
 import RadarChart from '@/components/RadarChart'
 import MetricCard from '@/components/MetricCard'
+import { BrainIcon, ChatIcon, LightbulbIcon } from '@/components/Icons'
 
 export default function Dashboard() {
   const { vectors, questionHistory, recentGains } = useCustomerTwinStore()
@@ -42,12 +43,12 @@ export default function Dashboard() {
           <MetricCard
             title="Overall Understanding"
             value={`${overallPercentage}%`}
-            icon="🧠"
+            icon={<BrainIcon size={24} className="text-gray-400" />}
           />
           <MetricCard
             title="Questions Asked"
             value={questionHistory.length}
-            icon="💬"
+            icon={<ChatIcon size={24} className="text-gray-400" />}
           />
           <MetricCard
             title="Strongest Area"
@@ -76,7 +77,7 @@ export default function Dashboard() {
                   key={index}
                   className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
                 >
-                  <span className="text-primary text-lg">💡</span>
+                  <LightbulbIcon size={20} className="text-primary mt-0.5 flex-shrink-0" />
                   <div>
                     <p className="text-sm text-gray-700">{question}</p>
                     {index === 0 && recentGains.length > 0 && (
@@ -119,7 +120,7 @@ export default function Dashboard() {
             href="/ask"
             className="inline-flex items-center gap-2 bg-white text-primary px-4 py-2.5 rounded-lg font-medium hover:bg-primary-50 transition-colors"
           >
-            <span>💬</span>
+            <ChatIcon size={18} />
             Ask Your Customer
           </Link>
         </div>

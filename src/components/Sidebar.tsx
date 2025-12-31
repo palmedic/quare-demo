@@ -2,16 +2,17 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
+import { DashboardIcon, ChatIcon, BrainIcon, BoltIcon, SettingsIcon } from './Icons'
 
 const navigation = [
-  { name: 'Dashboard', href: '/', icon: '📊' },
-  { name: 'Ask', href: '/ask', icon: '💬' },
-  { name: 'Customer Twin', href: '/twin', icon: '🧠' },
-  { name: 'Automations', href: '/automations', icon: '⚡' },
+  { name: 'Dashboard', href: '/', Icon: DashboardIcon },
+  { name: 'Ask', href: '/ask', Icon: ChatIcon },
+  { name: 'Customer Twin', href: '/twin', Icon: BrainIcon },
+  { name: 'Automations', href: '/automations', Icon: BoltIcon },
 ]
 
 const bottomNavigation = [
-  { name: 'Settings', href: '/settings', icon: '⚙️' },
+  { name: 'Settings', href: '/settings', Icon: SettingsIcon },
 ]
 
 export default function Sidebar() {
@@ -43,7 +44,7 @@ export default function Sidebar() {
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span className="text-lg">{item.icon}</span>
+              <item.Icon size={20} />
               {item.name}
             </Link>
           )
@@ -64,7 +65,7 @@ export default function Sidebar() {
                   : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
               }`}
             >
-              <span className="text-lg">{item.icon}</span>
+              <item.Icon size={20} />
               {item.name}
             </Link>
           )

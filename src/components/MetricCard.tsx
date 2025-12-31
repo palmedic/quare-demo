@@ -1,9 +1,11 @@
+import { ReactNode } from 'react'
+
 interface MetricCardProps {
   title: string
   value: string | number
   subtitle?: string
   color?: string
-  icon?: string
+  icon?: ReactNode
 }
 
 export default function MetricCard({ title, value, subtitle, color, icon }: MetricCardProps) {
@@ -23,7 +25,7 @@ export default function MetricCard({ title, value, subtitle, color, icon }: Metr
           )}
         </div>
         {icon && (
-          <span className="text-2xl">{icon}</span>
+          <div>{icon}</div>
         )}
       </div>
     </div>

@@ -4,6 +4,15 @@ import { useCustomerTwinStore, VectorKey } from '@/store/customerTwinStore'
 import RadarChart from '@/components/RadarChart'
 import DimensionBars from '@/components/DimensionBars'
 import MetricCard from '@/components/MetricCard'
+import { BrainIcon, ChatIcon, CloudIcon, TicketIcon, ChartIcon, FileIcon, RefreshIcon } from '@/components/Icons'
+
+const sourceIcons: Record<string, React.ReactNode> = {
+  'crm': <CloudIcon size={16} className="text-gray-500" />,
+  'support': <TicketIcon size={16} className="text-gray-500" />,
+  'analytics': <ChartIcon size={16} className="text-gray-500" />,
+  'documents': <FileIcon size={16} className="text-gray-500" />,
+  'code': <span className="text-gray-500 font-mono text-xs">{'</>'}</span>,
+}
 
 export default function CustomerTwinPage() {
   const { vectors, questionHistory, dataSources, resetTwin } = useCustomerTwinStore()
@@ -32,8 +41,9 @@ export default function CustomerTwinPage() {
         </div>
         <button
           onClick={resetTwin}
-          className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+          className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
         >
+          <RefreshIcon size={14} />
           Reset Twin
         </button>
       </div>
@@ -63,12 +73,12 @@ export default function CustomerTwinPage() {
             <MetricCard
               title="Overall"
               value={`${overallPercentage}%`}
-              icon="🧠"
+              icon={<BrainIcon size={20} className="text-gray-400" />}
             />
             <MetricCard
               title="Questions"
               value={questionHistory.length}
-              icon="💬"
+              icon={<ChatIcon size={20} className="text-gray-400" />}
             />
           </div>
 
@@ -121,7 +131,7 @@ export default function CustomerTwinPage() {
                   key={source.id}
                   className="flex items-center gap-2 text-sm"
                 >
-                  <span>{source.icon}</span>
+                  {sourceIcons[source.type] || <FileIcon size={16} className="text-gray-500" />}
                   <span className="text-gray-700">{source.name}</span>
                   <span className="text-xs text-gray-400 ml-auto">{source.lastSync}</span>
                 </div>
