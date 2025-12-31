@@ -1,6 +1,7 @@
 'use client'
 
 import Link from 'next/link'
+import Image from 'next/image'
 import { usePathname } from 'next/navigation'
 import { DashboardIcon, ChatIcon, BrainIcon, BoltIcon, SettingsIcon } from './Icons'
 
@@ -22,12 +23,13 @@ export default function Sidebar() {
     <div className="flex flex-col w-64 bg-slate-900 border-r border-slate-700 min-h-screen">
       {/* Logo */}
       <div className="flex items-center h-16 px-6 border-b border-slate-700">
-        <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
-            <span className="text-white font-bold text-lg">Q</span>
-          </div>
-          <span className="text-xl font-semibold text-white">Quare</span>
-        </div>
+        <Image
+          src="/logo.svg"
+          alt="Quare"
+          width={120}
+          height={32}
+          priority
+        />
       </div>
 
       {/* Main Navigation */}
