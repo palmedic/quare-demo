@@ -247,7 +247,7 @@ export default function AskPage() {
           </div>
 
           <div className="pl-11">
-            <p className="text-slate-300 leading-relaxed mb-4">{currentAnswer}</p>
+            <p className="text-white font-semibold leading-relaxed mb-4">{currentAnswer}</p>
 
             {/* Sources */}
             <div className="mb-4">
