@@ -7,8 +7,8 @@ import { DashboardIcon, ChatIcon, BrainIcon, BoltIcon, SettingsIcon } from './Ic
 
 const navigation = [
   { name: 'Dashboard', href: '/', Icon: DashboardIcon },
-  { name: 'Ask', href: '/ask', Icon: ChatIcon },
-  { name: 'Customer Twin', href: '/twin', Icon: BrainIcon },
+  { name: 'Ask your Customer', href: '/ask', Icon: ChatIcon },
+  { name: 'Shared Learning', href: '/twin', Icon: BrainIcon },
   { name: 'Automations', href: '/automations', Icon: BoltIcon },
 ]
 
@@ -22,7 +22,7 @@ export default function Sidebar() {
   return (
     <div className="flex flex-col w-64 bg-slate-900 border-r border-slate-700 min-h-screen">
       {/* Logo */}
-      <div className="flex items-center h-16 px-6 border-b border-slate-700">
+      <div className="flex items-center h-20 px-6 border-b border-slate-700">
         <Image
           src="/logo.svg"
           alt="Quare"
