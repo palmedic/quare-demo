@@ -72,14 +72,14 @@ export default function Dashboard() {
           <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Insights</h2>
           {questionHistory.length > 0 ? (
             <div className="space-y-3">
-              {questionHistory.slice(0, 5).map((question, index) => (
+              {questionHistory.slice(0, 5).map((entry, index) => (
                 <div
-                  key={index}
+                  key={entry.id}
                   className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
                 >
                   <LightbulbIcon size={20} className="text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm text-gray-700">{question}</p>
+                    <p className="text-sm text-gray-700">{entry.question}</p>
                     {index === 0 && recentGains.length > 0 && (
                       <div className="flex gap-2 mt-2">
                         {recentGains.map((gain) => (

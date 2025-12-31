@@ -38,7 +38,23 @@ export interface DataSource {
   type: 'crm' | 'support' | 'analytics' | 'documents' | 'code'
   connected: boolean
   lastSync?: string
-  icon: string
+}
+
+export interface KnowledgeSource {
+  id: string
+  name: string
+  type: 'wiki' | 'docs' | 'notes'
+  documents: number
+  connected: boolean
+  lastUpdate?: string
+}
+
+export interface CodeRepo {
+  id: string
+  name: string
+  rulesExtracted: number
+  connected: boolean
+  lastScan?: string
 }
 
 export interface AutomationLog {
@@ -50,19 +66,56 @@ export interface AutomationLog {
   agent: string
 }
 
+// New: Question history entry with radar snapshot
+export interface QuestionHistoryEntry {
+  id: string
+  question: string
+  answer: string
+  sources: string[]
+  boosts: Partial<Record<VectorKey, number>>
+  vectorsBeforeQuestion: Vectors
+  vectorsAfterQuestion: Vectors
+  timestamp: string
+  plan: QuestionPlan
+}
+
+// New: Detailed plan for answering a question
+export interface QuestionPlan {
+  dataSources: PlanStep[]
+  knowledgeSources: PlanStep[]
+  smeInterviews: PlanStep[]
+  codeExtraction: PlanStep[]
+}
+
+export interface PlanStep {
+  id: string
+  title: string
+  description: string
+  status: 'pending' | 'in_progress' | 'completed'
+  source?: string
+}
+
 interface CustomerTwinState {
   vectors: Vectors
-  questionHistory: string[]
+  questionHistory: QuestionHistoryEntry[]
   recentGains: RecentGain[]
   activeQuestion: QuestionData | null
   isProcessing: boolean
+  currentPlan: QuestionPlan | null
+  selectedHistoryId: string | null
   dataSources: DataSource[]
+  knowledgeSources: KnowledgeSource[]
+  codeRepos: CodeRepo[]
   automationLogs: AutomationLog[]
 
   // Actions
   askQuestion: (questionData: QuestionData) => Promise<void>
   resetTwin: () => void
   toggleDataSource: (id: string) => void
+  toggleKnowledgeSource: (id: string) => void
+  toggleCodeRepo: (id: string) => void
+  selectHistoryEntry: (id: string | null) => void
+  getVectorsForHistoryEntry: (id: string | null) => Vectors
 }
 
 const initialVectors: Vectors = {
@@ -75,12 +128,24 @@ const initialVectors: Vectors = {
 }
 
 const initialDataSources: DataSource[] = [
-  { id: '1', name: 'Salesforce', type: 'crm', connected: true, lastSync: '2 hours ago', icon: '☁️' },
-  { id: '2', name: 'Zendesk', type: 'support', connected: true, lastSync: '30 mins ago', icon: '🎫' },
-  { id: '3', name: 'Mixpanel', type: 'analytics', connected: true, lastSync: '1 hour ago', icon: '📊' },
-  { id: '4', name: 'Confluence', type: 'documents', connected: true, lastSync: '1 day ago', icon: '📄' },
-  { id: '5', name: 'GitHub', type: 'code', connected: false, icon: '💻' },
-  { id: '6', name: 'Intercom', type: 'support', connected: false, icon: '💬' },
+  { id: '1', name: 'Salesforce', type: 'crm', connected: true, lastSync: '2 hours ago' },
+  { id: '2', name: 'Zendesk', type: 'support', connected: true, lastSync: '30 mins ago' },
+  { id: '3', name: 'Mixpanel', type: 'analytics', connected: true, lastSync: '1 hour ago' },
+  { id: '4', name: 'HubSpot', type: 'crm', connected: false },
+  { id: '5', name: 'Intercom', type: 'support', connected: false },
+]
+
+const initialKnowledgeSources: KnowledgeSource[] = [
+  { id: '1', name: 'Confluence', type: 'wiki', documents: 234, connected: true, lastUpdate: '1 day ago' },
+  { id: '2', name: 'Google Drive', type: 'docs', documents: 89, connected: true, lastUpdate: '3 hours ago' },
+  { id: '3', name: 'Notion', type: 'notes', documents: 0, connected: false },
+]
+
+const initialCodeRepos: CodeRepo[] = [
+  { id: '1', name: 'pricing-engine', rulesExtracted: 47, connected: true, lastScan: '2 hours ago' },
+  { id: '2', name: 'subscription-service', rulesExtracted: 23, connected: true, lastScan: '1 day ago' },
+  { id: '3', name: 'onboarding-flow', rulesExtracted: 31, connected: true, lastScan: '6 hours ago' },
+  { id: '4', name: 'billing-api', rulesExtracted: 0, connected: false },
 ]
 
 const initialAutomationLogs: AutomationLog[] = [
@@ -91,22 +156,166 @@ const initialAutomationLogs: AutomationLog[] = [
   { id: '5', customer: 'Lisa Park', company: 'Innovate AI', action: 'Feature recommendation sent based on usage', timestamp: '3 hours ago', agent: 'Feature Adoption' },
 ]
 
+// Helper to generate a plan based on the question
+function generatePlan(question: string, boosts: Partial<Record<VectorKey, number>>): QuestionPlan {
+  const plan: QuestionPlan = {
+    dataSources: [],
+    knowledgeSources: [],
+    smeInterviews: [],
+    codeExtraction: []
+  }
+
+  // Generate relevant plan steps based on which dimensions are boosted
+  if (boosts.pricing) {
+    plan.dataSources.push({
+      id: 'ds1',
+      title: 'Query CRM deal history',
+      description: 'Fetch pricing negotiations and discount patterns from Salesforce',
+      status: 'completed',
+      source: 'Salesforce'
+    })
+    plan.codeExtraction.push({
+      id: 'ce1',
+      title: 'Extract pricing rules',
+      description: 'Analyze pricing-engine repo for discount logic and tier definitions',
+      status: 'completed',
+      source: 'pricing-engine'
+    })
+    plan.smeInterviews.push({
+      id: 'sme1',
+      title: 'Interview Sales Director',
+      description: 'Ask John Smith about common pricing objections and win/loss patterns',
+      status: 'completed',
+      source: 'John Smith, Sales Director'
+    })
+  }
+
+  if (boosts.churn) {
+    plan.dataSources.push({
+      id: 'ds2',
+      title: 'Analyze support ticket patterns',
+      description: 'Query Zendesk for escalation trends and unresolved issues',
+      status: 'completed',
+      source: 'Zendesk'
+    })
+    plan.knowledgeSources.push({
+      id: 'ks1',
+      title: 'Review churn analysis docs',
+      description: 'Fetch customer health documentation from Confluence',
+      status: 'completed',
+      source: 'Confluence'
+    })
+    plan.smeInterviews.push({
+      id: 'sme2',
+      title: 'Consult CS Lead',
+      description: 'Interview Maria Garcia about at-risk customer indicators',
+      status: 'completed',
+      source: 'Maria Garcia, CS Lead'
+    })
+  }
+
+  if (boosts.onboarding) {
+    plan.dataSources.push({
+      id: 'ds3',
+      title: 'Fetch onboarding metrics',
+      description: 'Get activation funnel data and drop-off points from Mixpanel',
+      status: 'completed',
+      source: 'Mixpanel'
+    })
+    plan.codeExtraction.push({
+      id: 'ce2',
+      title: 'Map onboarding flow',
+      description: 'Extract step definitions and validation rules from onboarding-flow repo',
+      status: 'completed',
+      source: 'onboarding-flow'
+    })
+    plan.knowledgeSources.push({
+      id: 'ks2',
+      title: 'Review onboarding playbook',
+      description: 'Fetch best practices documentation from Google Drive',
+      status: 'completed',
+      source: 'Google Drive'
+    })
+  }
+
+  if (boosts.features) {
+    plan.dataSources.push({
+      id: 'ds4',
+      title: 'Query feature usage data',
+      description: 'Analyze feature adoption metrics and power user patterns from Mixpanel',
+      status: 'completed',
+      source: 'Mixpanel'
+    })
+    plan.smeInterviews.push({
+      id: 'sme3',
+      title: 'Interview Product Manager',
+      description: 'Ask David Lee about feature prioritization and user feedback themes',
+      status: 'completed',
+      source: 'David Lee, Product Manager'
+    })
+  }
+
+  if (boosts.support) {
+    plan.dataSources.push({
+      id: 'ds5',
+      title: 'Analyze support patterns',
+      description: 'Query ticket categories, resolution times, and escalation paths from Zendesk',
+      status: 'completed',
+      source: 'Zendesk'
+    })
+    plan.knowledgeSources.push({
+      id: 'ks3',
+      title: 'Review support runbooks',
+      description: 'Fetch troubleshooting guides and FAQ documents from Confluence',
+      status: 'completed',
+      source: 'Confluence'
+    })
+  }
+
+  if (boosts.satisfaction) {
+    plan.dataSources.push({
+      id: 'ds6',
+      title: 'Fetch NPS survey data',
+      description: 'Get satisfaction scores and verbatim feedback from Salesforce',
+      status: 'completed',
+      source: 'Salesforce'
+    })
+    plan.smeInterviews.push({
+      id: 'sme4',
+      title: 'Interview Customer Success Manager',
+      description: 'Ask Lisa Wong about common satisfaction drivers and detractors',
+      status: 'completed',
+      source: 'Lisa Wong, CSM'
+    })
+  }
+
+  return plan
+}
+
 export const useCustomerTwinStore = create<CustomerTwinState>((set, get) => ({
   vectors: initialVectors,
   questionHistory: [],
   recentGains: [],
   activeQuestion: null,
   isProcessing: false,
+  currentPlan: null,
+  selectedHistoryId: null,
   dataSources: initialDataSources,
+  knowledgeSources: initialKnowledgeSources,
+  codeRepos: initialCodeRepos,
   automationLogs: initialAutomationLogs,
 
   askQuestion: async (questionData: QuestionData) => {
-    set({ activeQuestion: questionData, isProcessing: true })
+    const { vectors } = get()
+    const vectorsBeforeQuestion = JSON.parse(JSON.stringify(vectors)) as Vectors
+
+    // Generate and set the plan
+    const plan = generatePlan(questionData.question, questionData.boosts)
+    set({ activeQuestion: questionData, isProcessing: true, currentPlan: plan })
 
     // Simulate processing delay
-    await new Promise(resolve => setTimeout(resolve, 1500))
+    await new Promise(resolve => setTimeout(resolve, 2000))
 
-    const { vectors } = get()
     const gains: RecentGain[] = []
     const newVectors = { ...vectors }
 
@@ -127,10 +336,23 @@ export const useCustomerTwinStore = create<CustomerTwinState>((set, get) => ({
       }
     })
 
+    // Create history entry
+    const historyEntry: QuestionHistoryEntry = {
+      id: Date.now().toString(),
+      question: questionData.question,
+      answer: questionData.answer || '',
+      sources: questionData.sources,
+      boosts: questionData.boosts,
+      vectorsBeforeQuestion,
+      vectorsAfterQuestion: JSON.parse(JSON.stringify(newVectors)) as Vectors,
+      timestamp: new Date().toLocaleTimeString(),
+      plan
+    }
+
     set(state => ({
       vectors: newVectors,
       recentGains: gains,
-      questionHistory: [questionData.question, ...state.questionHistory].slice(0, 10),
+      questionHistory: [historyEntry, ...state.questionHistory].slice(0, 20),
       isProcessing: false
     }))
   },
@@ -140,7 +362,9 @@ export const useCustomerTwinStore = create<CustomerTwinState>((set, get) => ({
       vectors: initialVectors,
       recentGains: [],
       activeQuestion: null,
-      questionHistory: []
+      questionHistory: [],
+      currentPlan: null,
+      selectedHistoryId: null
     })
   },
 
@@ -150,5 +374,32 @@ export const useCustomerTwinStore = create<CustomerTwinState>((set, get) => ({
         ds.id === id ? { ...ds, connected: !ds.connected, lastSync: ds.connected ? undefined : 'Just now' } : ds
       )
     }))
+  },
+
+  toggleKnowledgeSource: (id: string) => {
+    set(state => ({
+      knowledgeSources: state.knowledgeSources.map(ks =>
+        ks.id === id ? { ...ks, connected: !ks.connected, lastUpdate: ks.connected ? undefined : 'Just now', documents: ks.connected ? 0 : 50 } : ks
+      )
+    }))
+  },
+
+  toggleCodeRepo: (id: string) => {
+    set(state => ({
+      codeRepos: state.codeRepos.map(cr =>
+        cr.id === id ? { ...cr, connected: !cr.connected, lastScan: cr.connected ? undefined : 'Just now', rulesExtracted: cr.connected ? 0 : 15 } : cr
+      )
+    }))
+  },
+
+  selectHistoryEntry: (id: string | null) => {
+    set({ selectedHistoryId: id })
+  },
+
+  getVectorsForHistoryEntry: (id: string | null) => {
+    const { questionHistory, vectors } = get()
+    if (!id) return vectors
+    const entry = questionHistory.find(h => h.id === id)
+    return entry ? entry.vectorsAfterQuestion : vectors
   }
 }))

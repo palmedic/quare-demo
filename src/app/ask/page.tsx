@@ -1,24 +1,57 @@
 'use client'
 
 import { useState } from 'react'
-import { useCustomerTwinStore, VectorKey } from '@/store/customerTwinStore'
+import { useCustomerTwinStore, VectorKey, QuestionPlan, PlanStep } from '@/store/customerTwinStore'
 import { sampleQuestions, getQuestionAnswer } from '@/data/sampleQuestions'
-import { DatabaseIcon, UsersIcon, CodeIcon, CheckIcon, SparklesIcon, ArrowRightIcon } from '@/components/Icons'
+import { DatabaseIcon, UsersIcon, CodeIcon, CheckIcon, SparklesIcon, ArrowRightIcon, BookIcon, CloudIcon, FileIcon, TicketIcon, ChartIcon } from '@/components/Icons'
+import { ReactNode } from 'react'
+
+type TabType = 'all' | 'data' | 'knowledge' | 'sme' | 'code'
+
+interface Tab {
+  id: TabType
+  label: string
+  description: string
+  Icon: (props: { size?: number; className?: string }) => ReactNode
+}
+
+const tabs: Tab[] = [
+  { id: 'all', label: 'All Questions', description: 'Browse all question types', Icon: SparklesIcon },
+  { id: 'data', label: 'Data Sources', description: 'Questions answered via CRM, analytics, support data', Icon: DatabaseIcon },
+  { id: 'knowledge', label: 'Knowledge', description: 'Questions from docs, wikis, and notes', Icon: BookIcon },
+  { id: 'sme', label: 'SME Interviews', description: 'Questions requiring expert knowledge', Icon: UsersIcon },
+  { id: 'code', label: 'Code Extraction', description: 'Questions extracting business rules from code', Icon: CodeIcon },
+]
+
+// Categorize sample questions by primary method
+const categorizedQuestions: Record<TabType, typeof sampleQuestions> = {
+  all: sampleQuestions,
+  data: sampleQuestions.filter(q => q.boosts.churn || q.boosts.satisfaction),
+  knowledge: sampleQuestions.filter(q => q.boosts.onboarding || q.boosts.support),
+  sme: sampleQuestions.filter(q => q.boosts.pricing),
+  code: sampleQuestions.filter(q => q.boosts.features || q.boosts.pricing),
+}
 
 export default function AskPage() {
-  const { vectors, askQuestion, isProcessing, activeQuestion, recentGains } = useCustomerTwinStore()
+  const { vectors, askQuestion, isProcessing, activeQuestion, recentGains, currentPlan } = useCustomerTwinStore()
   const [inputValue, setInputValue] = useState('')
-  const [showGuidance, setShowGuidance] = useState(false)
+  const [showPlan, setShowPlan] = useState(false)
   const [showAnswer, setShowAnswer] = useState(false)
   const [currentAnswer, setCurrentAnswer] = useState('')
+  const [activeTab, setActiveTab] = useState<TabType>('all')
+  const [planProgress, setPlanProgress] = useState(0)
 
   const handleAskQuestion = async (questionData: typeof sampleQuestions[0]) => {
-    setShowGuidance(true)
+    setShowPlan(true)
+    setPlanProgress(0)
 
-    // Simulate needing more data
-    await new Promise(resolve => setTimeout(resolve, 800))
+    // Animate through plan steps
+    const totalSteps = 8
+    for (let i = 1; i <= totalSteps; i++) {
+      await new Promise(resolve => setTimeout(resolve, 250))
+      setPlanProgress(Math.round((i / totalSteps) * 100))
+    }
 
-    setShowGuidance(false)
     await askQuestion(questionData)
     setCurrentAnswer(getQuestionAnswer(questionData.question))
     setShowAnswer(true)
@@ -44,8 +77,43 @@ export default function AskPage() {
 
   const resetState = () => {
     setShowAnswer(false)
+    setShowPlan(false)
     setCurrentAnswer('')
-    setShowGuidance(false)
+    setPlanProgress(0)
+  }
+
+  const renderPlanSection = (title: string, steps: PlanStep[], Icon: (props: { size?: number; className?: string; style?: React.CSSProperties }) => ReactNode, color: string) => {
+    if (steps.length === 0) return null
+    return (
+      <div className="mb-4">
+        <div className="flex items-center gap-2 mb-2">
+          <div className="w-6 h-6 rounded flex items-center justify-center" style={{ backgroundColor: color + '20' }}>
+            <Icon size={14} className="text-current" style={{ color }} />
+          </div>
+          <span className="text-sm font-medium text-gray-700">{title}</span>
+        </div>
+        <div className="space-y-2 pl-8">
+          {steps.map((step) => (
+            <div key={step.id} className="flex items-start gap-2">
+              <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
+                step.status === 'completed' ? 'bg-green-500' : step.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-gray-300'
+              }`}>
+                {step.status === 'completed' && <CheckIcon size={10} className="text-white" />}
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-sm text-gray-900">{step.title}</p>
+                <p className="text-xs text-gray-500">{step.description}</p>
+                {step.source && (
+                  <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded mt-1 inline-block">
+                    {step.source}
+                  </span>
+                )}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    )
   }
 
   return (
@@ -79,64 +147,36 @@ export default function AskPage() {
         </div>
       </form>
 
-      {/* Guidance Panel */}
-      {showGuidance && (
-        <div className="bg-amber-50 border border-amber-200 rounded-xl p-6 mb-8 animate-pulse">
-          <h3 className="text-lg font-medium text-amber-900 mb-4">
-            To answer this question well, I need:
-          </h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3 text-amber-800">
-              <div className="w-5 h-5 border-2 border-amber-400 rounded flex items-center justify-center">
-                <DatabaseIcon size={12} className="text-amber-400" />
-              </div>
+      {/* Planning Panel - Shows during processing */}
+      {showPlan && !showAnswer && (
+        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex items-center gap-3">
+              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
               <div>
-                <p className="font-medium">Connect a data source</p>
-                <p className="text-sm text-amber-600">"Connect Salesforce to see deal history"</p>
+                <p className="font-medium text-gray-900">Building answer plan...</p>
+                <p className="text-sm text-gray-500">Identifying relevant sources and experts</p>
               </div>
             </div>
-            <div className="flex items-center gap-3 text-amber-800">
-              <div className="w-5 h-5 border-2 border-amber-400 rounded flex items-center justify-center">
-                <UsersIcon size={12} className="text-amber-400" />
-              </div>
-              <div>
-                <p className="font-medium">Interview an SME</p>
-                <p className="text-sm text-amber-600">"Talk to your CS Lead about churn patterns"</p>
-              </div>
-            </div>
-            <div className="flex items-center gap-3 text-amber-800">
-              <div className="w-5 h-5 bg-amber-400 rounded flex items-center justify-center">
-                <CheckIcon size={12} className="text-white" />
-              </div>
-              <div>
-                <p className="font-medium">Extract from code</p>
-                <p className="text-sm text-amber-600">"Using pricing repo to extract business rules"</p>
-              </div>
-            </div>
+            <span className="text-sm font-medium text-primary">{planProgress}%</span>
           </div>
-        </div>
-      )}
 
-      {/* Processing State */}
-      {isProcessing && !showGuidance && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8">
-          <div className="flex items-center gap-4">
-            <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
-            <div>
-              <p className="font-medium text-gray-900">Analyzing your question...</p>
-              <p className="text-sm text-gray-500">Synthesizing insights from connected sources</p>
-            </div>
+          {/* Progress bar */}
+          <div className="w-full h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
+            <div
+              className="h-full bg-primary rounded-full transition-all duration-300"
+              style={{ width: `${planProgress}%` }}
+            />
           </div>
-          {activeQuestion && (
-            <div className="mt-4 flex gap-2">
-              {activeQuestion.sources.map((source) => (
-                <span
-                  key={source}
-                  className="text-xs px-2 py-1 bg-gray-100 text-gray-600 rounded-full"
-                >
-                  {source}
-                </span>
-              ))}
+
+          {/* Plan Details */}
+          {currentPlan && (
+            <div className="border-t border-gray-100 pt-4">
+              <h4 className="text-sm font-medium text-gray-900 mb-4">Execution Plan</h4>
+              {renderPlanSection('Data Sources', currentPlan.dataSources, DatabaseIcon, '#3B82F6')}
+              {renderPlanSection('Knowledge Sources', currentPlan.knowledgeSources, BookIcon, '#10B981')}
+              {renderPlanSection('SME Interviews', currentPlan.smeInterviews, UsersIcon, '#8B5CF6')}
+              {renderPlanSection('Code Extraction', currentPlan.codeExtraction, CodeIcon, '#F59E0B')}
             </div>
           )}
         </div>
@@ -207,40 +247,75 @@ export default function AskPage() {
         </div>
       )}
 
-      {/* Suggested Questions */}
-      {!showAnswer && !isProcessing && (
-        <div className="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-          <h3 className="text-lg font-medium text-gray-900 mb-4">Suggested Questions</h3>
-          <div className="space-y-2">
-            {sampleQuestions.map((q, index) => (
-              <button
-                key={index}
-                onClick={() => handleAskQuestion(q)}
-                className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-colors group"
-              >
-                <div className="flex items-center justify-between">
-                  <span className="text-gray-700 group-hover:text-gray-900">
-                    {q.question}
-                  </span>
-                  <ArrowRightIcon size={16} className="text-gray-400 group-hover:text-primary" />
+      {/* Suggested Questions with Tabs */}
+      {!showAnswer && !showPlan && (
+        <div className="bg-white border border-gray-200 rounded-xl shadow-sm overflow-hidden">
+          {/* Tab Navigation */}
+          <div className="border-b border-gray-200 px-6 pt-4">
+            <div className="flex gap-1 overflow-x-auto">
+              {tabs.map((tab) => (
+                <button
+                  key={tab.id}
+                  onClick={() => setActiveTab(tab.id)}
+                  className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg transition-colors whitespace-nowrap ${
+                    activeTab === tab.id
+                      ? 'bg-primary/10 text-primary border-b-2 border-primary -mb-px'
+                      : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  }`}
+                >
+                  <tab.Icon size={16} />
+                  {tab.label}
+                </button>
+              ))}
+            </div>
+          </div>
+
+          {/* Tab Description */}
+          <div className="px-6 py-3 bg-gray-50 border-b border-gray-100">
+            <p className="text-sm text-gray-600">
+              {tabs.find(t => t.id === activeTab)?.description}
+            </p>
+          </div>
+
+          {/* Questions List */}
+          <div className="p-6">
+            <div className="space-y-2">
+              {categorizedQuestions[activeTab].length > 0 ? (
+                categorizedQuestions[activeTab].map((q, index) => (
+                  <button
+                    key={index}
+                    onClick={() => handleAskQuestion(q)}
+                    className="w-full text-left px-4 py-3 rounded-lg border border-gray-200 hover:border-primary hover:bg-primary/5 transition-colors group"
+                  >
+                    <div className="flex items-center justify-between">
+                      <span className="text-gray-700 group-hover:text-gray-900">
+                        {q.question}
+                      </span>
+                      <ArrowRightIcon size={16} className="text-gray-400 group-hover:text-primary" />
+                    </div>
+                    {/* Preview of dimension impacts */}
+                    <div className="flex gap-2 mt-2">
+                      {Object.entries(q.boosts).map(([key, value]) => (
+                        <span
+                          key={key}
+                          className="text-xs px-2 py-0.5 rounded-full"
+                          style={{
+                            backgroundColor: vectors[key as VectorKey].color + '15',
+                            color: vectors[key as VectorKey].color
+                          }}
+                        >
+                          {vectors[key as VectorKey].label.split(' ')[0]} +{value}%
+                        </span>
+                      ))}
+                    </div>
+                  </button>
+                ))
+              ) : (
+                <div className="text-center py-8 text-gray-400">
+                  <p>No questions in this category yet</p>
                 </div>
-                {/* Preview of dimension impacts */}
-                <div className="flex gap-2 mt-2">
-                  {Object.entries(q.boosts).map(([key, value]) => (
-                    <span
-                      key={key}
-                      className="text-xs px-2 py-0.5 rounded-full"
-                      style={{
-                        backgroundColor: vectors[key as VectorKey].color + '15',
-                        color: vectors[key as VectorKey].color
-                      }}
-                    >
-                      {vectors[key as VectorKey].label.split(' ')[0]} +{value}%
-                    </span>
-                  ))}
-                </div>
-              </button>
-            ))}
+              )}
+            </div>
           </div>
         </div>
       )}
