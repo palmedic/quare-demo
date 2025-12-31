@@ -70,9 +70,9 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
         else ctx.lineTo(x, y)
       })
       ctx.closePath()
-      ctx.fillStyle = 'rgba(13, 148, 136, 0.2)'
+      ctx.fillStyle = 'rgba(96, 165, 250, 0.2)'
       ctx.fill()
-      ctx.strokeStyle = 'rgba(13, 148, 136, 0.6)'
+      ctx.strokeStyle = 'rgba(96, 165, 250, 0.6)'
       ctx.lineWidth = 2
       ctx.stroke()
 
