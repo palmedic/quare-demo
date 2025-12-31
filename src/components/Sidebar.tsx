@@ -26,8 +26,8 @@ export default function Sidebar() {
         <Image
           src="/logo.svg"
           alt="Quare"
-          width={120}
-          height={32}
+          width={156}
+          height={42}
           priority
         />
       </div>
