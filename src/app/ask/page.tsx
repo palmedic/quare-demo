@@ -151,7 +151,7 @@ export default function AskPage() {
 
       {/* Question Input */}
       <form onSubmit={handleSubmit} className="mb-8">
-        <div className="bg-slate-800 rounded-2xl border border-slate-700 shadow-lg p-2">
+        <div className="bg-slate-700 rounded-2xl border border-slate-600 shadow-lg p-2">
           <div className="relative">
             <input
               type="text"
@@ -159,7 +159,7 @@ export default function AskPage() {
               onChange={(e) => setInputValue(e.target.value)}
               placeholder="Ask your customer anything..."
               disabled={isProcessing}
-              className="w-full px-5 py-4 text-lg bg-transparent border-0 focus:outline-none focus:ring-0 disabled:text-slate-500 placeholder:text-slate-500 text-white"
+              className="w-full px-5 py-4 text-lg bg-transparent border-0 focus:outline-none focus:ring-0 disabled:text-slate-400 placeholder:text-slate-400 text-white"
             />
             <button
               type="submit"
