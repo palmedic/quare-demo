@@ -44,6 +44,7 @@ export default function AskPage() {
   const handleAskQuestion = async (questionData: typeof sampleQuestions[0]) => {
     setShowPlan(true)
     setPlanProgress(0)
+    setShowAnswer(false)
 
     // Animate through plan steps
     const totalSteps = 8
@@ -54,8 +55,13 @@ export default function AskPage() {
 
     await askQuestion(questionData)
     setCurrentAnswer(getQuestionAnswer(questionData.question))
-    setShowAnswer(true)
+    // Don't auto-dismiss the plan - wait for user click
     setInputValue('')
+  }
+
+  const showAnswerPanel = () => {
+    setShowPlan(false)
+    setShowAnswer(true)
   }
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -147,24 +153,38 @@ export default function AskPage() {
         </div>
       </form>
 
-      {/* Planning Panel - Shows during processing */}
-      {showPlan && !showAnswer && (
+      {/* Planning Panel - Shows during and after processing */}
+      {showPlan && (
         <div className="bg-white border border-gray-200 rounded-xl p-6 mb-8 shadow-sm">
           <div className="flex items-center justify-between mb-4">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              {planProgress < 100 || isProcessing ? (
+                <div className="w-8 h-8 border-2 border-primary border-t-transparent rounded-full animate-spin" />
+              ) : (
+                <div className="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
+                  <CheckIcon size={16} className="text-white" />
+                </div>
+              )}
               <div>
-                <p className="font-medium text-gray-900">Building answer plan...</p>
-                <p className="text-sm text-gray-500">Identifying relevant sources and experts</p>
+                <p className="font-medium text-gray-900">
+                  {planProgress < 100 || isProcessing ? 'Building answer plan...' : 'Plan completed!'}
+                </p>
+                <p className="text-sm text-gray-500">
+                  {planProgress < 100 || isProcessing
+                    ? 'Identifying relevant sources and experts'
+                    : 'All sources have been analyzed'}
+                </p>
               </div>
             </div>
-            <span className="text-sm font-medium text-primary">{planProgress}%</span>
+            <span className={`text-sm font-medium ${planProgress === 100 && !isProcessing ? 'text-green-600' : 'text-primary'}`}>
+              {planProgress}%
+            </span>
           </div>
 
           {/* Progress bar */}
           <div className="w-full h-2 bg-gray-100 rounded-full mb-6 overflow-hidden">
             <div
-              className="h-full bg-primary rounded-full transition-all duration-300"
+              className={`h-full rounded-full transition-all duration-300 ${planProgress === 100 && !isProcessing ? 'bg-green-500' : 'bg-primary'}`}
               style={{ width: `${planProgress}%` }}
             />
           </div>
@@ -177,6 +197,19 @@ export default function AskPage() {
               {renderPlanSection('Knowledge Sources', currentPlan.knowledgeSources, BookIcon, '#10B981')}
               {renderPlanSection('SME Interviews', currentPlan.smeInterviews, UsersIcon, '#8B5CF6')}
               {renderPlanSection('Code Extraction', currentPlan.codeExtraction, CodeIcon, '#F59E0B')}
+            </div>
+          )}
+
+          {/* View Answer Button - shows when complete */}
+          {planProgress === 100 && !isProcessing && (
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <button
+                onClick={showAnswerPanel}
+                className="w-full bg-primary text-white py-3 px-4 rounded-lg font-medium hover:bg-primary-600 transition-colors flex items-center justify-center gap-2"
+              >
+                View Answer
+                <ArrowRightIcon size={16} />
+              </button>
             </div>
           )}
         </div>
