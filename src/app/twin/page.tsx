@@ -97,48 +97,52 @@ export default function CustomerTwinPage() {
             <h2 className="text-lg font-medium text-gray-900 mb-4">Dimension Strength</h2>
             <DimensionBars vectors={displayVectors} />
           </div>
+        </div>
 
-          {/* Question History Timeline */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mt-6">
-            <div className="flex items-center gap-2 mb-4">
-              <ClockIcon size={20} className="text-gray-400" />
-              <h2 className="text-lg font-medium text-gray-900">Question History</h2>
+        {/* Right Column: Question History first, then Stats */}
+        <div className="space-y-6">
+          {/* Question History - Now at the top */}
+          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+            <div className="flex items-center justify-between mb-3">
+              <div className="flex items-center gap-2">
+                <ClockIcon size={16} className="text-gray-400" />
+                <h3 className="text-sm font-medium text-gray-900">Question History</h3>
+              </div>
+              <span className="text-xs text-gray-400">{questionHistory.length} questions</span>
             </div>
             {questionHistory.length > 0 ? (
-              <div className="space-y-3">
+              <div className="space-y-2 max-h-80 overflow-y-auto">
                 {questionHistory.map((entry, index) => {
                   const isSelected = selectedHistoryId === entry.id
-                  // Calculate total gain for this question
                   const totalGain = Object.values(entry.boosts).reduce((sum, val) => sum + (val || 0), 0)
 
                   return (
                     <button
                       key={entry.id}
                       onClick={() => selectHistoryEntry(isSelected ? null : entry.id)}
-                      className={`w-full text-left p-4 rounded-lg border transition-all ${
+                      className={`w-full text-left p-3 rounded-lg border transition-all ${
                         isSelected
-                          ? 'border-primary bg-primary/5 shadow-sm'
+                          ? 'border-primary bg-primary/5'
                           : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
                       }`}
                     >
-                      <div className="flex items-start justify-between gap-3">
+                      <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
-                          <div className="flex items-center gap-2 mb-1">
-                            <span className="text-xs text-gray-400">#{questionHistory.length - index}</span>
+                          <div className="flex items-center gap-1.5 mb-0.5">
+                            <span className="text-xs font-medium text-gray-400">#{questionHistory.length - index}</span>
                             <span className="text-xs text-gray-400">{entry.timestamp}</span>
                           </div>
-                          <p className={`text-sm truncate ${isSelected ? 'text-gray-900 font-medium' : 'text-gray-700'}`}>
+                          <p className={`text-sm line-clamp-2 ${isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
                             {entry.question}
                           </p>
-                          {/* Show dimension boosts */}
-                          <div className="flex gap-1.5 mt-2 flex-wrap">
+                          <div className="flex gap-1 mt-1.5 flex-wrap">
                             {Object.entries(entry.boosts).map(([key, value]) => (
                               <span
                                 key={key}
                                 className="text-xs px-1.5 py-0.5 rounded"
                                 style={{
-                                  backgroundColor: displayVectors[key as VectorKey].color + '20',
-                                  color: displayVectors[key as VectorKey].color
+                                  backgroundColor: vectors[key as VectorKey].color + '20',
+                                  color: vectors[key as VectorKey].color
                                 }}
                               >
                                 +{value}%
@@ -146,27 +150,20 @@ export default function CustomerTwinPage() {
                             ))}
                           </div>
                         </div>
-                        <div className="text-right flex-shrink-0">
-                          <span className="text-sm font-medium text-green-600">+{totalGain}%</span>
-                          <p className="text-xs text-gray-400">total gain</p>
-                        </div>
+                        <span className="text-xs font-medium text-green-600 flex-shrink-0">+{totalGain}%</span>
                       </div>
                     </button>
                   )
                 })}
               </div>
             ) : (
-              <div className="text-center py-8 text-gray-400">
-                <ChatIcon size={32} className="mx-auto mb-2 opacity-50" />
-                <p className="text-sm">No questions asked yet</p>
-                <p className="text-xs mt-1">Ask questions to build your Customer Twin</p>
+              <div className="text-center py-6 text-gray-400">
+                <ChatIcon size={24} className="mx-auto mb-2 opacity-50" />
+                <p className="text-xs">No questions asked yet</p>
               </div>
             )}
           </div>
-        </div>
 
-        {/* Right Column: Stats + History */}
-        <div className="space-y-6">
           {/* Summary Cards */}
           <div className="grid grid-cols-2 gap-4">
             <MetricCard
