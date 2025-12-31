@@ -1,0 +1,67 @@
+@import "tailwindcss";
+
+@theme {
+  --color-primary-50: #E6F7F6;
+  --color-primary-100: #CCEFED;
+  --color-primary-200: #99DFDB;
+  --color-primary-300: #66CFC9;
+  --color-primary-400: #33BFB7;
+  --color-primary-500: #0D9488;
+  --color-primary-600: #0A766D;
+  --color-primary-700: #085952;
+  --color-primary-800: #053B37;
+  --color-primary-900: #031E1B;
+  --color-primary: #0D9488;
+
+  --color-pricing: #F59E0B;
+  --color-churn: #EF4444;
+  --color-onboarding: #10B981;
+  --color-features: #8B5CF6;
+  --color-support: #3B82F6;
+  --color-satisfaction: #EC4899;
+
+  --font-sans: 'Inter', system-ui, sans-serif;
+}
+
+html {
+  font-family: var(--font-sans);
+}
+
+body {
+  background-color: #f8fafc;
+}
+
+/* Smooth transitions for dimension bars */
+.dimension-bar {
+  transition: width 0.5s ease-out;
+}
+
+/* Radar chart animation */
+@keyframes pulse-glow {
+  0%, 100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.pulse-glow {
+  animation: pulse-glow 2s ease-in-out infinite;
+}
+
+/* Processing animation */
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+.shimmer {
+  background: linear-gradient(90deg, #f0f0f0 25%, #e0e0e0 50%, #f0f0f0 75%);
+  background-size: 200% 100%;
+  animation: shimmer 1.5s infinite;
+}
