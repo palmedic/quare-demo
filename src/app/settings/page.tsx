@@ -47,12 +47,12 @@ export default function SettingsPage() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Settings</h1>
-        <p className="text-gray-500 mt-1">Manage your data connections and integrations</p>
+        <h1 className="text-2xl font-semibold text-white">Settings</h1>
+        <p className="text-slate-400 mt-1">Manage your data connections and integrations</p>
       </div>
 
       {/* Tabs */}
-      <div className="border-b border-gray-200 mb-6">
+      <div className="border-b border-slate-700 mb-6">
         <div className="flex gap-6">
           {tabs.map((tab) => (
             <button
@@ -61,7 +61,7 @@ export default function SettingsPage() {
               className={`pb-3 text-sm font-medium border-b-2 transition-colors flex items-center gap-2 ${
                 activeTab === tab.id
                   ? 'border-primary text-primary'
-                  : 'border-transparent text-gray-500 hover:text-gray-700'
+                  : 'border-transparent text-slate-400 hover:text-white'
               }`}
             >
               <tab.Icon size={16} />
@@ -73,39 +73,39 @@ export default function SettingsPage() {
 
       {/* Data Sources Tab */}
       {activeTab === 'data' && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
+        <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-sm overflow-hidden">
+          <div className="p-4 border-b border-slate-700">
             <div className="flex items-center justify-between">
-              <h2 className="font-medium text-gray-900">Connected Integrations</h2>
-              <button className="text-sm text-primary hover:text-primary-600 font-medium flex items-center gap-1">
+              <h2 className="font-medium text-white">Connected Integrations</h2>
+              <button className="text-sm text-primary hover:text-primary-400 font-medium flex items-center gap-1">
                 <LinkIcon size={14} />
                 Add Integration
               </button>
             </div>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-slate-700">
             {dataSources.map((source) => {
               const IconComponent = dataSourceIcons[source.type] || DatabaseIcon
               return (
                 <div key={source.id} className="p-4 flex items-center gap-4">
-                  <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                    <IconComponent size={20} className="text-gray-500" />
+                  <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                    <IconComponent size={20} className="text-slate-400" />
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-gray-900">{source.name}</h3>
-                      <span className="text-xs text-gray-400 capitalize">{source.type}</span>
+                      <h3 className="font-medium text-white">{source.name}</h3>
+                      <span className="text-xs text-slate-500 capitalize">{source.type}</span>
                     </div>
                     {source.connected && source.lastSync && (
-                      <p className="text-sm text-gray-500">Last synced: {source.lastSync}</p>
+                      <p className="text-sm text-slate-400">Last synced: {source.lastSync}</p>
                     )}
                   </div>
                   <div className="flex items-center gap-3">
                     <span
                       className={`text-xs px-2 py-0.5 rounded-full ${
                         source.connected
-                          ? 'bg-green-100 text-green-700'
-                          : 'bg-gray-100 text-gray-500'
+                          ? 'bg-green-900/50 text-green-400'
+                          : 'bg-slate-700 text-slate-400'
                       }`}
                     >
                       {source.connected ? 'Connected' : 'Disconnected'}
@@ -114,8 +114,8 @@ export default function SettingsPage() {
                       onClick={() => toggleDataSource(source.id)}
                       className={`text-sm font-medium ${
                         source.connected
-                          ? 'text-red-500 hover:text-red-600'
-                          : 'text-primary hover:text-primary-600'
+                          ? 'text-red-400 hover:text-red-300'
+                          : 'text-primary hover:text-primary-400'
                       }`}
                     >
                       {source.connected ? 'Disconnect' : 'Connect'}
@@ -130,28 +130,28 @@ export default function SettingsPage() {
 
       {/* Knowledge Sources Tab */}
       {activeTab === 'knowledge' && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
+        <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-sm overflow-hidden">
+          <div className="p-4 border-b border-slate-700">
             <div className="flex items-center justify-between">
-              <h2 className="font-medium text-gray-900">Document Sources</h2>
-              <button className="text-sm text-primary hover:text-primary-600 font-medium flex items-center gap-1">
+              <h2 className="font-medium text-white">Document Sources</h2>
+              <button className="text-sm text-primary hover:text-primary-400 font-medium flex items-center gap-1">
                 <LinkIcon size={14} />
                 Add Source
               </button>
             </div>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-slate-700">
             {knowledgeSources.map((source) => (
               <div key={source.id} className="p-4 flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <source.Icon size={20} className="text-gray-500" />
+                <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                  <source.Icon size={20} className="text-slate-400" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-gray-900">{source.name}</h3>
+                    <h3 className="font-medium text-white">{source.name}</h3>
                   </div>
                   {source.connected && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-slate-400">
                       {source.documents} documents • Updated {source.lastUpdate}
                     </p>
                   )}
@@ -160,8 +160,8 @@ export default function SettingsPage() {
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
                       source.connected
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-500'
+                        ? 'bg-green-900/50 text-green-400'
+                        : 'bg-slate-700 text-slate-400'
                     }`}
                   >
                     {source.connected ? 'Connected' : 'Disconnected'}
@@ -169,8 +169,8 @@ export default function SettingsPage() {
                   <button
                     className={`text-sm font-medium ${
                       source.connected
-                        ? 'text-red-500 hover:text-red-600'
-                        : 'text-primary hover:text-primary-600'
+                        ? 'text-red-400 hover:text-red-300'
+                        : 'text-primary hover:text-primary-400'
                     }`}
                   >
                     {source.connected ? 'Disconnect' : 'Connect'}
@@ -184,28 +184,28 @@ export default function SettingsPage() {
 
       {/* Code Repositories Tab */}
       {activeTab === 'code' && (
-        <div className="bg-white rounded-xl border border-gray-200 shadow-sm overflow-hidden">
-          <div className="p-4 border-b border-gray-100">
+        <div className="bg-slate-800 rounded-xl border border-slate-700 shadow-sm overflow-hidden">
+          <div className="p-4 border-b border-slate-700">
             <div className="flex items-center justify-between">
-              <h2 className="font-medium text-gray-900">Code Repositories</h2>
-              <button className="text-sm text-primary hover:text-primary-600 font-medium flex items-center gap-1">
+              <h2 className="font-medium text-white">Code Repositories</h2>
+              <button className="text-sm text-primary hover:text-primary-400 font-medium flex items-center gap-1">
                 <LinkIcon size={14} />
                 Add Repository
               </button>
             </div>
           </div>
-          <div className="divide-y divide-gray-100">
+          <div className="divide-y divide-slate-700">
             {codeRepos.map((repo) => (
               <div key={repo.id} className="p-4 flex items-center gap-4">
-                <div className="w-10 h-10 bg-gray-100 rounded-lg flex items-center justify-center">
-                  <CodeIcon size={20} className="text-gray-500" />
+                <div className="w-10 h-10 bg-slate-700 rounded-lg flex items-center justify-center">
+                  <CodeIcon size={20} className="text-slate-400" />
                 </div>
                 <div className="flex-1">
                   <div className="flex items-center gap-2">
-                    <h3 className="font-medium text-gray-900 font-mono text-sm">{repo.name}</h3>
+                    <h3 className="font-medium text-white font-mono text-sm">{repo.name}</h3>
                   </div>
                   {repo.connected && (
-                    <p className="text-sm text-gray-500">
+                    <p className="text-sm text-slate-400">
                       {repo.rulesExtracted} business rules extracted • Last scan: {repo.lastScan}
                     </p>
                   )}
@@ -214,8 +214,8 @@ export default function SettingsPage() {
                   <span
                     className={`text-xs px-2 py-0.5 rounded-full ${
                       repo.connected
-                        ? 'bg-green-100 text-green-700'
-                        : 'bg-gray-100 text-gray-500'
+                        ? 'bg-green-900/50 text-green-400'
+                        : 'bg-slate-700 text-slate-400'
                     }`}
                   >
                     {repo.connected ? 'Connected' : 'Disconnected'}
@@ -223,8 +223,8 @@ export default function SettingsPage() {
                   <button
                     className={`text-sm font-medium ${
                       repo.connected
-                        ? 'text-red-500 hover:text-red-600'
-                        : 'text-primary hover:text-primary-600'
+                        ? 'text-red-400 hover:text-red-300'
+                        : 'text-primary hover:text-primary-400'
                     }`}
                   >
                     {repo.connected ? 'Disconnect' : 'Connect'}

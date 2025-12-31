@@ -19,14 +19,14 @@ export default function Sidebar() {
   const pathname = usePathname()
 
   return (
-    <div className="flex flex-col w-64 bg-white border-r border-gray-200 min-h-screen">
+    <div className="flex flex-col w-64 bg-slate-900 border-r border-slate-700 min-h-screen">
       {/* Logo */}
-      <div className="flex items-center h-16 px-6 border-b border-gray-200">
+      <div className="flex items-center h-16 px-6 border-b border-slate-700">
         <div className="flex items-center gap-2">
           <div className="w-8 h-8 bg-primary rounded-lg flex items-center justify-center">
             <span className="text-white font-bold text-lg">Q</span>
           </div>
-          <span className="text-xl font-semibold text-gray-900">Quare</span>
+          <span className="text-xl font-semibold text-white">Quare</span>
         </div>
       </div>
 
@@ -40,8 +40,8 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
               <item.Icon size={20} />
@@ -52,7 +52,7 @@ export default function Sidebar() {
       </nav>
 
       {/* Bottom Navigation */}
-      <div className="px-4 py-4 border-t border-gray-200">
+      <div className="px-4 py-4 border-t border-slate-700">
         {bottomNavigation.map((item) => {
           const isActive = pathname === item.href
           return (
@@ -61,8 +61,8 @@ export default function Sidebar() {
               href={item.href}
               className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-colors ${
                 isActive
-                  ? 'bg-primary/10 text-primary'
-                  : 'text-gray-600 hover:bg-gray-100 hover:text-gray-900'
+                  ? 'bg-primary/20 text-primary'
+                  : 'text-slate-400 hover:bg-slate-800 hover:text-white'
               }`}
             >
               <item.Icon size={20} />

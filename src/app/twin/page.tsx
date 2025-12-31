@@ -7,11 +7,11 @@ import MetricCard from '@/components/MetricCard'
 import { BrainIcon, ChatIcon, CloudIcon, TicketIcon, ChartIcon, FileIcon, ClockIcon, DatabaseIcon } from '@/components/Icons'
 
 const sourceIcons: Record<string, React.ReactNode> = {
-  'crm': <CloudIcon size={16} className="text-gray-500" />,
-  'support': <TicketIcon size={16} className="text-gray-500" />,
-  'analytics': <ChartIcon size={16} className="text-gray-500" />,
-  'documents': <FileIcon size={16} className="text-gray-500" />,
-  'code': <span className="text-gray-500 font-mono text-xs">{'</>'}</span>,
+  'crm': <CloudIcon size={16} className="text-slate-500" />,
+  'support': <TicketIcon size={16} className="text-slate-500" />,
+  'analytics': <ChartIcon size={16} className="text-slate-500" />,
+  'documents': <FileIcon size={16} className="text-slate-500" />,
+  'code': <span className="text-slate-500 font-mono text-xs">{'</>'}</span>,
 }
 
 export default function CustomerTwinPage() {
@@ -47,8 +47,8 @@ export default function CustomerTwinPage() {
       {/* Header */}
       <div className="flex items-center justify-between mb-8">
         <div>
-          <h1 className="text-2xl font-semibold text-gray-900">Customer Twin</h1>
-          <p className="text-gray-500 mt-1">
+          <h1 className="text-2xl font-semibold text-white">Customer Twin</h1>
+          <p className="text-slate-400 mt-1">
             {selectedHistoryId
               ? `Viewing state after: "${selectedEntry?.question.slice(0, 40)}..."`
               : 'Visualize your understanding of customers (current state)'}
@@ -57,7 +57,7 @@ export default function CustomerTwinPage() {
         {selectedHistoryId && (
           <button
             onClick={() => selectHistoryEntry(null)}
-            className="text-sm text-primary hover:text-primary-600 px-3 py-1.5 border border-primary rounded-lg hover:bg-primary/5 transition-colors"
+            className="text-sm text-primary hover:text-primary-400 px-3 py-1.5 border border-primary rounded-lg hover:bg-primary/10 transition-colors"
           >
             View Current State
           </button>
@@ -68,11 +68,11 @@ export default function CustomerTwinPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column: Radar Chart */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm">
             <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-medium text-gray-900">Understanding Map</h2>
+              <h2 className="text-lg font-medium text-white">Understanding Map</h2>
               {selectedHistoryId && (
-                <span className="text-xs px-2 py-1 bg-amber-100 text-amber-700 rounded-full">
+                <span className="text-xs px-2 py-1 bg-amber-900/50 text-amber-400 rounded-full">
                   Historical View
                 </span>
               )}
@@ -83,8 +83,8 @@ export default function CustomerTwinPage() {
           </div>
 
           {/* Dimension Strength Bars */}
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm mt-6">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Dimension Strength</h2>
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm mt-6">
+            <h2 className="text-lg font-medium text-white mb-4">Dimension Strength</h2>
             <DimensionBars vectors={displayVectors} />
           </div>
         </div>
@@ -92,13 +92,13 @@ export default function CustomerTwinPage() {
         {/* Right Column: Question History first, then Stats */}
         <div className="space-y-6">
           {/* Question History - Now at the top */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm">
             <div className="flex items-center justify-between mb-3">
               <div className="flex items-center gap-2">
-                <ClockIcon size={16} className="text-gray-400" />
-                <h3 className="text-sm font-medium text-gray-900">Question History</h3>
+                <ClockIcon size={16} className="text-slate-500" />
+                <h3 className="text-sm font-medium text-white">Question History</h3>
               </div>
-              <span className="text-xs text-gray-400">{questionHistory.length} questions</span>
+              <span className="text-xs text-slate-500">{questionHistory.length} questions</span>
             </div>
             {questionHistory.length > 0 ? (
               <div className="space-y-2 max-h-80 overflow-y-auto">
@@ -112,17 +112,17 @@ export default function CustomerTwinPage() {
                       onClick={() => selectHistoryEntry(isSelected ? null : entry.id)}
                       className={`w-full text-left p-3 rounded-lg border transition-all ${
                         isSelected
-                          ? 'border-primary bg-primary/5'
-                          : 'border-gray-100 hover:border-gray-200 hover:bg-gray-50'
+                          ? 'border-primary bg-primary/10'
+                          : 'border-slate-700 hover:border-slate-600 hover:bg-slate-700/50'
                       }`}
                     >
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <div className="flex items-center gap-1.5 mb-0.5">
-                            <span className="text-xs font-medium text-gray-400">#{questionHistory.length - index}</span>
-                            <span className="text-xs text-gray-400">{entry.timestamp}</span>
+                            <span className="text-xs font-medium text-slate-500">#{questionHistory.length - index}</span>
+                            <span className="text-xs text-slate-500">{entry.timestamp}</span>
                           </div>
-                          <p className={`text-sm line-clamp-2 ${isSelected ? 'text-gray-900 font-medium' : 'text-gray-600'}`}>
+                          <p className={`text-sm line-clamp-2 ${isSelected ? 'text-white font-medium' : 'text-slate-300'}`}>
                             {entry.question}
                           </p>
                           <div className="flex gap-1 mt-1.5 flex-wrap">
@@ -140,14 +140,14 @@ export default function CustomerTwinPage() {
                             ))}
                           </div>
                         </div>
-                        <span className="text-xs font-medium text-green-600 flex-shrink-0">+{totalGain}%</span>
+                        <span className="text-xs font-medium text-green-500 flex-shrink-0">+{totalGain}%</span>
                       </div>
                     </button>
                   )
                 })}
               </div>
             ) : (
-              <div className="text-center py-6 text-gray-400">
+              <div className="text-center py-6 text-slate-500">
                 <ChatIcon size={24} className="mx-auto mb-2 opacity-50" />
                 <p className="text-xs">No questions asked yet</p>
               </div>
@@ -159,40 +159,40 @@ export default function CustomerTwinPage() {
             <MetricCard
               title="Overall"
               value={`${overallPercentage}%`}
-              icon={<BrainIcon size={20} className="text-gray-400" />}
+              icon={<BrainIcon size={20} className="text-slate-500" />}
             />
             <MetricCard
               title="Questions"
               value={questionHistory.length}
-              icon={<ChatIcon size={20} className="text-gray-400" />}
+              icon={<ChatIcon size={20} className="text-slate-500" />}
             />
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Strongest Area</h3>
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Strongest Area</h3>
             <p className="text-lg font-semibold" style={{ color: strongest.color }}>
               {strongest.label}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               {Math.round((strongest.value / strongest.max) * 100)}% understanding
             </p>
           </div>
 
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
-            <h3 className="text-sm font-medium text-gray-500 mb-1">Needs Attention</h3>
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm">
+            <h3 className="text-sm font-medium text-slate-400 mb-1">Needs Attention</h3>
             <p className="text-lg font-semibold" style={{ color: needsAttention.color }}>
               {needsAttention.label}
             </p>
-            <p className="text-sm text-gray-500">
+            <p className="text-sm text-slate-500">
               {Math.round((needsAttention.value / needsAttention.max) * 100)}% understanding
             </p>
           </div>
 
           {/* Data Sources */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
-              <DatabaseIcon size={16} className="text-gray-400" />
-              <h3 className="text-sm font-medium text-gray-900">Data Sources</h3>
+              <DatabaseIcon size={16} className="text-slate-500" />
+              <h3 className="text-sm font-medium text-white">Data Sources</h3>
             </div>
             <div className="space-y-2">
               {connectedDataSources.map((source) => (
@@ -200,22 +200,22 @@ export default function CustomerTwinPage() {
                   key={source.id}
                   className="flex items-center gap-2 text-sm"
                 >
-                  {sourceIcons[source.type] || <DatabaseIcon size={16} className="text-gray-500" />}
-                  <span className="text-gray-700">{source.name}</span>
-                  <span className="text-xs text-gray-400 ml-auto">{source.lastSync}</span>
+                  {sourceIcons[source.type] || <DatabaseIcon size={16} className="text-slate-500" />}
+                  <span className="text-slate-300">{source.name}</span>
+                  <span className="text-xs text-slate-500 ml-auto">{source.lastSync}</span>
                 </div>
               ))}
               {connectedDataSources.length === 0 && (
-                <p className="text-sm text-gray-400">No data sources connected</p>
+                <p className="text-sm text-slate-500">No data sources connected</p>
               )}
             </div>
           </div>
 
           {/* Knowledge Sources */}
-          <div className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm">
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm">
             <div className="flex items-center gap-2 mb-3">
-              <FileIcon size={16} className="text-gray-400" />
-              <h3 className="text-sm font-medium text-gray-900">Knowledge Sources</h3>
+              <FileIcon size={16} className="text-slate-500" />
+              <h3 className="text-sm font-medium text-white">Knowledge Sources</h3>
             </div>
             <div className="space-y-2">
               {connectedDataSources.filter(ds => ds.type === 'documents').length > 0 ? (
@@ -224,13 +224,13 @@ export default function CustomerTwinPage() {
                     key={source.id}
                     className="flex items-center gap-2 text-sm"
                   >
-                    <FileIcon size={16} className="text-gray-500" />
-                    <span className="text-gray-700">{source.name}</span>
-                    <span className="text-xs text-gray-400 ml-auto">{source.lastSync}</span>
+                    <FileIcon size={16} className="text-slate-500" />
+                    <span className="text-slate-300">{source.name}</span>
+                    <span className="text-xs text-slate-500 ml-auto">{source.lastSync}</span>
                   </div>
                 ))
               ) : (
-                <p className="text-sm text-gray-400">Connect knowledge sources in Settings</p>
+                <p className="text-sm text-slate-500">Connect knowledge sources in Settings</p>
               )}
             </div>
           </div>

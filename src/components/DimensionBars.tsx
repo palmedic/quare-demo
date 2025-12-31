@@ -25,12 +25,12 @@ export default function DimensionBars({ vectors, showLabels = true }: DimensionB
                     className="w-2.5 h-2.5 rounded-full"
                     style={{ backgroundColor: vector.color }}
                   />
-                  <span className="text-gray-700">{vector.label}</span>
+                  <span className="text-slate-300">{vector.label}</span>
                 </div>
-                <span className="font-medium text-gray-900">{percentage}%</span>
+                <span className="font-medium text-white">{percentage}%</span>
               </div>
             )}
-            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
+            <div className="h-2 bg-slate-700 rounded-full overflow-hidden">
               <div
                 className="h-full rounded-full transition-all duration-500 ease-out"
                 style={{

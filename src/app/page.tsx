@@ -24,15 +24,15 @@ export default function Dashboard() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
-        <p className="text-gray-500 mt-1">Your Customer Twin health at a glance</p>
+        <h1 className="text-2xl font-semibold text-white">Dashboard</h1>
+        <p className="text-slate-400 mt-1">Your Customer Twin health at a glance</p>
       </div>
 
       {/* Top Section: Radar + Metrics */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
         {/* Radar Chart */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Understanding Map</h2>
+        <div className="lg:col-span-2 bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm">
+          <h2 className="text-lg font-medium text-white mb-4">Understanding Map</h2>
           <div className="flex justify-center">
             <RadarChart vectors={vectors} size={350} />
           </div>
@@ -43,12 +43,12 @@ export default function Dashboard() {
           <MetricCard
             title="Overall Understanding"
             value={`${overallPercentage}%`}
-            icon={<BrainIcon size={24} className="text-gray-400" />}
+            icon={<BrainIcon size={24} className="text-slate-500" />}
           />
           <MetricCard
             title="Questions Asked"
             value={questionHistory.length}
-            icon={<ChatIcon size={24} className="text-gray-400" />}
+            icon={<ChatIcon size={24} className="text-slate-500" />}
           />
           <MetricCard
             title="Strongest Area"
@@ -68,18 +68,18 @@ export default function Dashboard() {
       {/* Recent Insights + Quick Action */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Recent Insights */}
-        <div className="lg:col-span-2 bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Insights</h2>
+        <div className="lg:col-span-2 bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm">
+          <h2 className="text-lg font-medium text-white mb-4">Recent Insights</h2>
           {questionHistory.length > 0 ? (
             <div className="space-y-3">
               {questionHistory.slice(0, 5).map((entry, index) => (
                 <div
                   key={entry.id}
-                  className="flex items-start gap-3 p-3 bg-gray-50 rounded-lg"
+                  className="flex items-start gap-3 p-3 bg-slate-700/50 rounded-lg"
                 >
                   <LightbulbIcon size={20} className="text-primary mt-0.5 flex-shrink-0" />
                   <div>
-                    <p className="text-sm text-gray-700">{entry.question}</p>
+                    <p className="text-sm text-slate-300">{entry.question}</p>
                     {index === 0 && recentGains.length > 0 && (
                       <div className="flex gap-2 mt-2">
                         {recentGains.map((gain) => (
@@ -102,8 +102,8 @@ export default function Dashboard() {
             </div>
           ) : (
             <div className="text-center py-8">
-              <p className="text-gray-500">No questions asked yet.</p>
-              <p className="text-sm text-gray-400 mt-1">
+              <p className="text-slate-400">No questions asked yet.</p>
+              <p className="text-sm text-slate-500 mt-1">
                 Start asking questions to build your Customer Twin
               </p>
             </div>

@@ -29,7 +29,7 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
       const numVectors = vectorKeys.length
       const angleStep = (Math.PI * 2) / numVectors
 
-      // Draw background rings
+      // Draw background rings (dark mode)
       for (let ring = 1; ring <= 4; ring++) {
         ctx.beginPath()
         const ringRadius = (maxRadius / 4) * ring
@@ -40,12 +40,12 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
           if (i === 0) ctx.moveTo(x, y)
           else ctx.lineTo(x, y)
         }
-        ctx.strokeStyle = 'rgba(0,0,0,0.08)'
+        ctx.strokeStyle = 'rgba(255,255,255,0.1)'
         ctx.lineWidth = 1
         ctx.stroke()
       }
 
-      // Draw axis lines
+      // Draw axis lines (dark mode)
       vectorKeys.forEach((key, i) => {
         const angle = i * angleStep - Math.PI / 2
         ctx.beginPath()
@@ -54,7 +54,7 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
           centerX + Math.cos(angle) * maxRadius,
           centerY + Math.sin(angle) * maxRadius
         )
-        ctx.strokeStyle = 'rgba(0,0,0,0.1)'
+        ctx.strokeStyle = 'rgba(255,255,255,0.15)'
         ctx.stroke()
       })
 
@@ -70,9 +70,9 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
         else ctx.lineTo(x, y)
       })
       ctx.closePath()
-      ctx.fillStyle = 'rgba(13, 148, 136, 0.15)'
+      ctx.fillStyle = 'rgba(13, 148, 136, 0.2)'
       ctx.fill()
-      ctx.strokeStyle = 'rgba(13, 148, 136, 0.4)'
+      ctx.strokeStyle = 'rgba(13, 148, 136, 0.6)'
       ctx.lineWidth = 2
       ctx.stroke()
 
@@ -98,7 +98,7 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
           centerY + Math.sin(nextAngle) * nextRadius
         )
         ctx.closePath()
-        ctx.fillStyle = vectors[key].color + '20'
+        ctx.fillStyle = vectors[key].color + '30'
         ctx.fill()
       })
 
@@ -113,7 +113,7 @@ export default function RadarChart({ vectors, size = 320 }: RadarChartProps) {
         // Outer glow
         ctx.beginPath()
         ctx.arc(x, y, 10, 0, Math.PI * 2)
-        ctx.fillStyle = vectors[key].color + '40'
+        ctx.fillStyle = vectors[key].color + '50'
         ctx.fill()
 
         // Inner point

@@ -73,8 +73,8 @@ export default function AutomationsPage() {
     <div className="p-8">
       {/* Header */}
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Automations</h1>
-        <p className="text-gray-500 mt-1">Autonomous agents powered by your Customer Twin</p>
+        <h1 className="text-2xl font-semibold text-white">Automations</h1>
+        <p className="text-slate-400 mt-1">Autonomous agents powered by your Customer Twin</p>
       </div>
 
       {/* Impact Metrics */}
@@ -82,13 +82,13 @@ export default function AutomationsPage() {
         {impactMetrics.map((metric) => (
           <div
             key={metric.label}
-            className="bg-white rounded-xl border border-gray-200 p-5 shadow-sm"
+            className="bg-slate-800 rounded-xl border border-slate-700 p-5 shadow-sm"
           >
             <div className="flex items-center gap-2 mb-2">
-              <metric.Icon size={20} className="text-gray-400" />
+              <metric.Icon size={20} className="text-slate-500" />
             </div>
-            <p className="text-2xl font-semibold text-gray-900">{metric.value}</p>
-            <p className="text-sm text-gray-500 mt-1">{metric.label}</p>
+            <p className="text-2xl font-semibold text-white">{metric.value}</p>
+            <p className="text-sm text-slate-400 mt-1">{metric.label}</p>
           </div>
         ))}
       </div>
@@ -96,13 +96,13 @@ export default function AutomationsPage() {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Active Agents */}
         <div className="lg:col-span-2">
-          <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-            <h2 className="text-lg font-medium text-gray-900 mb-4">Active Agents</h2>
+          <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm">
+            <h2 className="text-lg font-medium text-white mb-4">Active Agents</h2>
             <div className="space-y-4">
               {agents.map((agent) => (
                 <div
                   key={agent.id}
-                  className="flex items-start gap-4 p-4 rounded-lg border border-gray-100 hover:border-gray-200 transition-colors"
+                  className="flex items-start gap-4 p-4 rounded-lg border border-slate-700 hover:border-slate-600 transition-colors"
                 >
                   <div
                     className="w-10 h-10 rounded-lg flex items-center justify-center"
@@ -112,18 +112,18 @@ export default function AutomationsPage() {
                   </div>
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h3 className="font-medium text-gray-900">{agent.name}</h3>
+                      <h3 className="font-medium text-white">{agent.name}</h3>
                       <span
                         className={`text-xs px-2 py-0.5 rounded-full ${
                           agent.status === 'active'
-                            ? 'bg-green-100 text-green-700'
-                            : 'bg-gray-100 text-gray-500'
+                            ? 'bg-green-900/50 text-green-400'
+                            : 'bg-slate-700 text-slate-400'
                         }`}
                       >
                         {agent.status}
                       </span>
                     </div>
-                    <p className="text-sm text-gray-500 mt-0.5">{agent.description}</p>
+                    <p className="text-sm text-slate-400 mt-0.5">{agent.description}</p>
                     <p
                       className="text-sm font-medium mt-2"
                       style={{ color: agent.color }}
@@ -131,7 +131,7 @@ export default function AutomationsPage() {
                       {agent.metric}
                     </p>
                   </div>
-                  <button className="text-sm text-gray-400 hover:text-gray-600 flex items-center gap-1">
+                  <button className="text-sm text-slate-500 hover:text-slate-300 flex items-center gap-1">
                     Configure
                     <ArrowRightIcon size={14} />
                   </button>
@@ -142,19 +142,19 @@ export default function AutomationsPage() {
         </div>
 
         {/* Action Logs */}
-        <div className="bg-white rounded-xl border border-gray-200 p-6 shadow-sm">
-          <h2 className="text-lg font-medium text-gray-900 mb-4">Recent Actions</h2>
+        <div className="bg-slate-800 rounded-xl border border-slate-700 p-6 shadow-sm">
+          <h2 className="text-lg font-medium text-white mb-4">Recent Actions</h2>
           <div className="space-y-4">
             {automationLogs.map((log) => (
-              <div key={log.id} className="border-b border-gray-100 pb-4 last:border-0 last:pb-0">
+              <div key={log.id} className="border-b border-slate-700 pb-4 last:border-0 last:pb-0">
                 <div className="flex items-center gap-2 text-sm">
-                  <span className="font-medium text-gray-900">{log.customer}</span>
-                  <span className="text-gray-400">•</span>
-                  <span className="text-gray-500">{log.company}</span>
+                  <span className="font-medium text-white">{log.customer}</span>
+                  <span className="text-slate-500">•</span>
+                  <span className="text-slate-400">{log.company}</span>
                 </div>
-                <p className="text-sm text-gray-600 mt-1">{log.action}</p>
-                <div className="flex items-center gap-2 mt-2 text-xs text-gray-400">
-                  <span className="px-1.5 py-0.5 bg-gray-100 rounded">
+                <p className="text-sm text-slate-300 mt-1">{log.action}</p>
+                <div className="flex items-center gap-2 mt-2 text-xs text-slate-500">
+                  <span className="px-1.5 py-0.5 bg-slate-700 rounded">
                     {log.agent}
                   </span>
                   <span>{log.timestamp}</span>
