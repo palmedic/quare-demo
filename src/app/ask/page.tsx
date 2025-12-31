@@ -90,6 +90,9 @@ export default function AskPage() {
 
   const renderPlanSection = (title: string, steps: PlanStep[], Icon: (props: { size?: number; className?: string; style?: React.CSSProperties }) => ReactNode, color: string) => {
     if (steps.length === 0) return null
+    const completedCount = steps.filter(s => s.status === 'completed').length
+    const needsInputCount = steps.filter(s => s.status === 'needs_input').length
+
     return (
       <div className="mb-4">
         <div className="flex items-center gap-2 mb-2">
@@ -97,22 +100,36 @@ export default function AskPage() {
             <Icon size={14} className="text-current" style={{ color }} />
           </div>
           <span className="text-sm font-medium text-gray-700">{title}</span>
+          <span className="text-xs text-gray-400 ml-auto">
+            {completedCount}/{steps.length} complete
+            {needsInputCount > 0 && <span className="text-amber-600 ml-1">• {needsInputCount} needs input</span>}
+          </span>
         </div>
         <div className="space-y-2 pl-8">
           {steps.map((step) => (
-            <div key={step.id} className="flex items-start gap-2">
+            <div key={step.id} className={`flex items-start gap-2 ${step.status === 'needs_input' ? 'bg-amber-50 -ml-2 pl-2 py-2 rounded-lg border border-amber-200' : ''}`}>
               <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 mt-0.5 ${
-                step.status === 'completed' ? 'bg-green-500' : step.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-gray-300'
+                step.status === 'completed' ? 'bg-green-500' :
+                step.status === 'needs_input' ? 'bg-amber-500' :
+                step.status === 'in_progress' ? 'bg-amber-500 animate-pulse' : 'bg-gray-300'
               }`}>
                 {step.status === 'completed' && <CheckIcon size={10} className="text-white" />}
+                {step.status === 'needs_input' && <span className="text-white text-xs font-bold">!</span>}
               </div>
               <div className="flex-1 min-w-0">
-                <p className="text-sm text-gray-900">{step.title}</p>
-                <p className="text-xs text-gray-500">{step.description}</p>
+                <p className={`text-sm ${step.status === 'needs_input' ? 'text-amber-900 font-medium' : 'text-gray-900'}`}>{step.title}</p>
+                <p className={`text-xs ${step.status === 'needs_input' ? 'text-amber-700' : 'text-gray-500'}`}>{step.description}</p>
                 {step.source && (
                   <span className="text-xs px-1.5 py-0.5 bg-gray-100 text-gray-600 rounded mt-1 inline-block">
                     {step.source}
                   </span>
+                )}
+                {step.actionRequired && (
+                  <div className="mt-1.5 flex items-center gap-1.5">
+                    <span className="text-xs px-2 py-1 bg-amber-100 text-amber-800 rounded-md font-medium">
+                      Action needed: {step.actionRequired}
+                    </span>
+                  </div>
                 )}
               </div>
             </div>

@@ -91,8 +91,9 @@ export interface PlanStep {
   id: string
   title: string
   description: string
-  status: 'pending' | 'in_progress' | 'completed'
+  status: 'pending' | 'in_progress' | 'completed' | 'needs_input'
   source?: string
+  actionRequired?: string
 }
 
 interface CustomerTwinState {
@@ -166,6 +167,9 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
   }
 
   // Generate relevant plan steps based on which dimensions are boosted
+  // Some steps will show as "needs_input" to demonstrate that building a Customer Twin
+  // requires collaboration between Quare and the organization
+
   if (boosts.pricing) {
     plan.dataSources.push({
       id: 'ds1',
@@ -173,6 +177,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       description: 'Fetch pricing negotiations and discount patterns from Salesforce',
       status: 'completed',
       source: 'Salesforce'
+    })
+    plan.dataSources.push({
+      id: 'ds1b',
+      title: 'Import competitor pricing data',
+      description: 'No competitor analysis data source connected',
+      status: 'needs_input',
+      actionRequired: 'Connect competitor intelligence tool or upload pricing research'
     })
     plan.codeExtraction.push({
       id: 'ce1',
@@ -188,6 +199,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       status: 'completed',
       source: 'John Smith, Sales Director'
     })
+    plan.smeInterviews.push({
+      id: 'sme1b',
+      title: 'Interview Finance Lead',
+      description: 'Need input on margin requirements and discount approval thresholds',
+      status: 'needs_input',
+      actionRequired: 'Schedule interview with CFO or Finance Director'
+    })
   }
 
   if (boosts.churn) {
@@ -197,6 +215,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       description: 'Query Zendesk for escalation trends and unresolved issues',
       status: 'completed',
       source: 'Zendesk'
+    })
+    plan.dataSources.push({
+      id: 'ds2b',
+      title: 'Fetch product usage decline data',
+      description: 'HubSpot integration not connected - missing engagement signals',
+      status: 'needs_input',
+      actionRequired: 'Connect HubSpot or upload usage decline reports'
     })
     plan.knowledgeSources.push({
       id: 'ks1',
@@ -236,6 +261,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       status: 'completed',
       source: 'Google Drive'
     })
+    plan.knowledgeSources.push({
+      id: 'ks2b',
+      title: 'Import customer success stories',
+      description: 'Missing documentation on successful onboarding patterns',
+      status: 'needs_input',
+      actionRequired: 'Upload case studies or connect to customer testimonials'
+    })
   }
 
   if (boosts.features) {
@@ -253,6 +285,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       status: 'completed',
       source: 'David Lee, Product Manager'
     })
+    plan.codeExtraction.push({
+      id: 'ce3',
+      title: 'Extract feature flag configurations',
+      description: 'billing-api repo not connected - missing feature entitlement rules',
+      status: 'needs_input',
+      actionRequired: 'Connect billing-api repository in Settings'
+    })
   }
 
   if (boosts.support) {
@@ -262,6 +301,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       description: 'Query ticket categories, resolution times, and escalation paths from Zendesk',
       status: 'completed',
       source: 'Zendesk'
+    })
+    plan.dataSources.push({
+      id: 'ds5b',
+      title: 'Import chat transcript analysis',
+      description: 'Intercom not connected - missing real-time support insights',
+      status: 'needs_input',
+      actionRequired: 'Connect Intercom integration in Settings'
     })
     plan.knowledgeSources.push({
       id: 'ks3',
@@ -286,6 +332,13 @@ function generatePlan(question: string, boosts: Partial<Record<VectorKey, number
       description: 'Ask Lisa Wong about common satisfaction drivers and detractors',
       status: 'completed',
       source: 'Lisa Wong, CSM'
+    })
+    plan.knowledgeSources.push({
+      id: 'ks4',
+      title: 'Review customer feedback themes',
+      description: 'No product feedback documentation found in Notion',
+      status: 'needs_input',
+      actionRequired: 'Connect Notion workspace or upload feedback summaries'
     })
   }
 
