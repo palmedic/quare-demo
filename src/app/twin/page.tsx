@@ -4,7 +4,7 @@ import { useCustomerTwinStore, VectorKey, Vectors } from '@/store/customerTwinSt
 import RadarChart from '@/components/RadarChart'
 import DimensionBars from '@/components/DimensionBars'
 import MetricCard from '@/components/MetricCard'
-import { BrainIcon, ChatIcon, CloudIcon, TicketIcon, ChartIcon, FileIcon, RefreshIcon, ClockIcon, DatabaseIcon } from '@/components/Icons'
+import { BrainIcon, ChatIcon, CloudIcon, TicketIcon, ChartIcon, FileIcon, ClockIcon, DatabaseIcon } from '@/components/Icons'
 
 const sourceIcons: Record<string, React.ReactNode> = {
   'crm': <CloudIcon size={16} className="text-gray-500" />,
@@ -19,7 +19,6 @@ export default function CustomerTwinPage() {
     vectors,
     questionHistory,
     dataSources,
-    resetTwin,
     selectedHistoryId,
     selectHistoryEntry,
     getVectorsForHistoryEntry
@@ -55,23 +54,14 @@ export default function CustomerTwinPage() {
               : 'Visualize your understanding of customers (current state)'}
           </p>
         </div>
-        <div className="flex items-center gap-2">
-          {selectedHistoryId && (
-            <button
-              onClick={() => selectHistoryEntry(null)}
-              className="text-sm text-primary hover:text-primary-600 px-3 py-1.5 border border-primary rounded-lg hover:bg-primary/5 transition-colors"
-            >
-              View Current State
-            </button>
-          )}
+        {selectedHistoryId && (
           <button
-            onClick={resetTwin}
-            className="text-sm text-gray-500 hover:text-gray-700 px-3 py-1.5 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors flex items-center gap-2"
+            onClick={() => selectHistoryEntry(null)}
+            className="text-sm text-primary hover:text-primary-600 px-3 py-1.5 border border-primary rounded-lg hover:bg-primary/5 transition-colors"
           >
-            <RefreshIcon size={14} />
-            Reset Twin
+            View Current State
           </button>
-        </div>
+        )}
       </div>
 
       {/* Main Content Grid */}
